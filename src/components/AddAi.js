@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdAddCircle, MdClose } from "react-icons/md";
+import axios from "axios";
 
 export default function AddAi({ onFormSubmit }) {
   const [name, setName] = useState("");
@@ -16,13 +17,15 @@ export default function AddAi({ onFormSubmit }) {
     console.log("Form Data:", ai);
 
     try {
-      const response = await fetch("https://ai-hub-server.vercel.app/api/ai/", {
-        method: "POST",
-        body: JSON.stringify(ai),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "https://ai-hub-server.vercel.app/api/ai/",
+        ai,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const json = await response.json();
 
       if (!response.ok) {
