@@ -18,7 +18,9 @@ export default function AIList() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/ai/");
+      const response = await axios.get(
+        "https://ai-hub-server.vercel.app/api/ai/"
+      );
       setData(response.data);
       setOriginalData(response.data);
     } catch (error) {
@@ -58,7 +60,7 @@ export default function AIList() {
 
   const deleteAi = async (id) => {
     try {
-      await fetch(`http://localhost:4000/api/ai/${id}`, {
+      await fetch(`https://ai-hub-server.vercel.app/api/ai/${id}`, {
         method: "DELETE",
       });
 

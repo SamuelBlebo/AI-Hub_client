@@ -16,7 +16,7 @@ export default function AddAi({ onFormSubmit }) {
     console.log("Form Data:", ai);
 
     try {
-      const response = await fetch("http://localhost:4000/api/ai/", {
+      const response = await fetch("https://ai-hub-server.vercel.app/api/ai/", {
         method: "POST",
         body: JSON.stringify(ai),
         headers: {
