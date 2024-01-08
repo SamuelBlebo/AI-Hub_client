@@ -19,7 +19,7 @@ export default function AIList() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://ai-hub-server.vercel.app/api/ai/"
+        "https://ai-hub-server.vercel.app/api/ai/"
       );
       setData(response.data);
       setOriginalData(response.data);
