@@ -26,7 +26,7 @@ export default function AddAi({ onFormSubmit }) {
           },
         }
       );
-      const json = await response.json();
+      const json = await response.data;
 
       if (!response.ok) {
         setError(json.error);
@@ -105,7 +105,7 @@ export default function AddAi({ onFormSubmit }) {
                         </option>
                         <option value="Tech">Tech</option>
                         <option value="Image">Image</option>
-                        <option value="Vidoe">Vidoe</option>
+                        <option value="Vidoe">Video</option>
                         <option value="SEO">SEO</option>
                       </select>
                     </label>

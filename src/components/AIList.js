@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import { useAuth } from "../auth/AuthContext";
+
 import { FaMicrochip } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
 import AddAi from "./AddAi";
 import Searchbar from "./Searchbar";
+import Sidebar from "./Sidebar";
 import User from "./User";
 
 export default function AIList() {
@@ -14,7 +17,10 @@ export default function AIList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loginSuccessMessage, setLoginSuccessMessage] = useState(null);
   const [notFoundMessage, setNotFoundMessage] = useState(null);
+  const { currentUser } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = async () => {
     try {
@@ -31,8 +37,31 @@ export default function AIList() {
   };
 
   useEffect(() => {
+    if (currentUser) {
+      setLoginSuccessMessage("Logged In");
+    }
+
+    setTimeout(() => {
+      setLoginSuccessMessage(null);
+    }, 2000);
+
     fetchData();
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    // Filter data based on search query
+    const filteredData = originalData.filter((ai) =>
+      ai.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+    );
+
+    if (filteredData.length === 0) {
+      setNotFoundMessage(`No result(s) found for "${searchQuery}"`);
+    } else {
+      setNotFoundMessage(null);
+    }
+
+    setData(filteredData);
+  }, [searchQuery, originalData]);
 
   const handleFormSubmit = async () => {
     setLoading(true);
@@ -84,36 +113,32 @@ export default function AIList() {
   };
 
   const handleSearch = (query) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const filteredData = originalData.filter((ai) =>
-      ai.name.toLowerCase().includes(lowerCaseQuery)
-    );
-
-    if (filteredData.length === 0) {
-      setNotFoundMessage(`No result(s) found for "${query}"`);
-    } else {
-      setNotFoundMessage(null);
-    }
-
-    setData(filteredData);
+    setSearchQuery(query);
   };
 
   return (
     <>
       <div className=" w-[100%] flex justify-between items-center px-[20px]">
-        <AddAi onFormSubmit={handleFormSubmit} />
+        {currentUser ? <AddAi onFormSubmit={handleFormSubmit} /> : <div></div>}
+
         <Searchbar onSearch={handleSearch} />
-        <User />
+        <Sidebar onSearch={handleSearch} />
+        {currentUser ? <User /> : <div></div>}
       </div>
 
+      {loginSuccessMessage && (
+        <div className="bg-green-500 text-white py-1 px-4 mt-2 rounded-md">
+          {loginSuccessMessage}
+        </div>
+      )}
       {successMessage && (
-        <div className="bg-green-500 text-white py-2 px-4 mt-4 rounded-[10px]">
+        <div className="bg-green-500 text-white py-1 px-4 mt-2 rounded-sm">
           {successMessage}
         </div>
       )}
 
       {notFoundMessage && (
-        <div className="bg-red-500 text-white py-2 px-4 mt-4 rounded-[10px]">
+        <div className="bg-red-500 text-white py-1 px-4 mt-4 rounded-md">
           {notFoundMessage}
         </div>
       )}
@@ -157,12 +182,17 @@ export default function AIList() {
                     Detail
                   </a>
                 </div>
-                <div className="opacity-0 hover:opacity-100">
-                  <MdDelete
-                    className="text-[#ff1d1d] text-[20px]"
-                    onClick={() => deleteAi(ai._id)}
-                  />
-                </div>
+                {currentUser ? (
+                  <div className="opacity-0 hover:opacity-100">
+                    <MdDelete
+                      className="text-[#ff1d1d] text-[20px]"
+                      onClick={() => deleteAi(ai._id)}
+                    />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+
                 <div>
                   <p className="text-[#5e5e5e]">{ai.price}</p>
                 </div>

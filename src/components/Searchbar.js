@@ -6,11 +6,9 @@ export default function Searchbar({ onSearch }) {
   const [query, setQuery] = useState("");
 
   const handleInputChange = (event) => {
-    setQuery(event.target.value);
-  };
-
-  const handleSearch = () => {
-    onSearch(query);
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    onSearch(newQuery); // Trigger onSearch on every input change
   };
 
   return (
@@ -23,7 +21,7 @@ export default function Searchbar({ onSearch }) {
           onChange={handleInputChange}
           className="w-[90%] px-[10px] outline-none"
         />
-        <BsSearch onClick={handleSearch} className="stroke-0.4" />
+        <BsSearch className="stroke-0.4" />
       </div>
     </div>
   );
