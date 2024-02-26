@@ -186,7 +186,7 @@ export default function AIList() {
                     rel="noopener noreferrer"
                     className="text-white text-[12px] no-underline cursor-pointer hover:text-darkblue"
                   >
-                    Detail
+                    Visit
                   </a>
                 </div>
                 {currentUser ? (
