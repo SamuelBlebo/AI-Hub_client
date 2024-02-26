@@ -23,7 +23,6 @@ function SignUp() {
         const user = userCredential.user;
         console.log(user);
         navigate("/signin");
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -33,6 +32,8 @@ function SignUp() {
           setError("Mail already in use.");
         } else if (errorCode === "auth/weak-password") {
           setError("Weak password.");
+        } else if (errorCode === "auth/network-request-failed") {
+          setError("Network error");
         } else {
           setError(errorMessage);
         }

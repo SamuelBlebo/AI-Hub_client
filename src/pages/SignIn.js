@@ -27,7 +27,17 @@ function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setError("Invalid credentials, try again.");
+        if (errorCode === "auth/invalid-credential") {
+          setError("Invalid credential, try again.");
+        } else if (errorCode === "auth/too-many-requests") {
+          setError(
+            "Too many requests, your account is temporarily blocked, try again later."
+          );
+        } else if (errorCode === "auth/network-request-failed") {
+          setError("Network error.");
+        } else {
+          setError(errorMessage);
+        }
         setTimeout(() => {
           setError(null);
         }, 3000);

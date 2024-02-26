@@ -12,6 +12,7 @@ export default function AddAi({ onFormSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPopupOpen(false);
 
     const ai = { name, description, category, link, price };
     console.log("Form Data:", ai);
@@ -39,6 +40,7 @@ export default function AddAi({ onFormSubmit }) {
         setLink("");
         setPrice("");
       }
+
       onFormSubmit();
     } catch (error) {
       setError(error.message);

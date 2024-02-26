@@ -49,18 +49,25 @@ export default function AIList() {
   }, [currentUser]);
 
   useEffect(() => {
-    // Filter data based on search query
-    const filteredData = originalData.filter((ai) =>
-      ai.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+    const filteredData = originalData.filter(
+      (ai) =>
+        ai.name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+        ai.price.toLowerCase() === searchQuery.toLowerCase() ||
+        ai.category.toLowerCase() === searchQuery.toLowerCase()
     );
+
+    setData(filteredData);
 
     if (filteredData.length === 0) {
       setNotFoundMessage(`No result(s) found for "${searchQuery}"`);
+
+      setTimeout(() => {
+        setNotFoundMessage(null);
+      }, 3500);
+      setData(originalData);
     } else {
       setNotFoundMessage(null);
     }
-
-    setData(filteredData);
   }, [searchQuery, originalData]);
 
   const handleFormSubmit = async () => {
@@ -132,13 +139,13 @@ export default function AIList() {
         </div>
       )}
       {successMessage && (
-        <div className="bg-green-500 text-white py-1 px-4 mt-2 rounded-sm">
+        <div className="bg-green-500 text-white py-1 px-4 mt-2 rounded-md">
           {successMessage}
         </div>
       )}
 
       {notFoundMessage && (
-        <div className="bg-red-500 text-white py-1 px-4 mt-4 rounded-md">
+        <div className="bg-red-500 text-white py-1 px-4 mt-2 rounded-md">
           {notFoundMessage}
         </div>
       )}

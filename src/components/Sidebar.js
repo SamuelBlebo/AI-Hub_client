@@ -10,22 +10,70 @@ export default function Sidebar({ onSearch }) {
   const { currentUser } = useAuth();
   const { auth } = useAuth();
   const { navigate } = useNavigate();
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isDropdownAllVisible, setIsDropdownAllVisible] = useState(false);
+  const [isDropdownPriceVisible, setIsDropdownPriceVisible] = useState(false);
+  const [isDropdownCategoryVisible, setIsDropdownCategoryVisible] =
+    useState(false);
 
-  const [query, setQuery] = useState("");
+  const toggleAllDropdown = () => {
+    setIsDropdownAllVisible(!isDropdownAllVisible);
+
+    if (isDropdownPriceVisible) {
+      setIsDropdownPriceVisible(!isDropdownPriceVisible);
+    }
+    if (isDropdownCategoryVisible) {
+      setIsDropdownCategoryVisible(!isDropdownCategoryVisible);
+    }
+    if (isDropdownAllVisible) {
+      onSearch("");
+    }
+  };
+  const toggleDropdownPrice = () => {
+    setIsDropdownPriceVisible(!isDropdownPriceVisible);
+
+    if (isDropdownAllVisible) {
+      setIsDropdownAllVisible(!isDropdownAllVisible);
+    }
+    if (isDropdownCategoryVisible) {
+      setIsDropdownCategoryVisible(!isDropdownCategoryVisible);
+    }
+    if (isDropdownPriceVisible) {
+      onSearch("");
+    }
+  };
+
+  const toggleDropdownCategory = () => {
+    setIsDropdownCategoryVisible(!isDropdownCategoryVisible);
+    if (isDropdownAllVisible) {
+      setIsDropdownAllVisible(!isDropdownAllVisible);
+    }
+
+    if (isDropdownPriceVisible) {
+      setIsDropdownPriceVisible(!isDropdownPriceVisible);
+    }
+
+    if (isDropdownCategoryVisible) {
+      onSearch("");
+    }
+  };
 
   const handleLetterClick = (letter) => {
-    const newQuery = letter;
-    setQuery(newQuery);
-    onSearch(newQuery);
+    onSearch(letter);
   };
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
+
+  const handlePriceClick = (price) => {
+    onSearch(price);
+  };
+  const handleCategoryClick = (category) => {
+    onSearch(category);
   };
 
   const alphabetLetters = Array.from({ length: 26 }, (_, index) =>
     String.fromCharCode("A".charCodeAt(0) + index)
   );
+
+  const prices = ["Free", "Freemium", "Premium"];
+  const categories = ["Tech", "Image", "Video", "SEO"];
 
   const handleLogout = async () => {
     try {
@@ -47,12 +95,12 @@ export default function Sidebar({ onSearch }) {
         </div>
         <div
           className="text-[#fff] text-[16px] mt-[50px] display flex space-x-2 cursor-pointer"
-          onClick={toggleDropdown}
+          onClick={toggleAllDropdown}
         >
           <h3 className="font-semibold">All</h3>
           <MdOutlineKeyboardArrowDown className="text-[24px]" />
         </div>
-        {isDropdownVisible && (
+        {isDropdownAllVisible && (
           <div className="text-[#fff] text-[10px] mt-[10px] grid grid-cols-5">
             {alphabetLetters.map((letter) => (
               <div
@@ -65,14 +113,46 @@ export default function Sidebar({ onSearch }) {
             ))}
           </div>
         )}
-        <div className="text-[#fff] text-[16px] mt-[20px]   display flex space-x-2">
+        <div
+          className="text-[#fff] text-[16px] mt-[20px]   display flex space-x-2 cursor-pointer"
+          onClick={toggleDropdownPrice}
+        >
           <h3 className="font-semibold">Price</h3>
           <MdOutlineKeyboardArrowDown className=" text-[24px]" />
         </div>
-        <div className="text-[#fff] text-[16px] mt-[20px]   display flex space-x-2 ">
+        {isDropdownPriceVisible && (
+          <div className="text-[#fff] text-[12px] mt-[10px] flex flex-col">
+            {prices.map((price, index) => (
+              <div
+                key={index}
+                className="cursor-pointer w-[25%] mb-2 "
+                onClick={() => handlePriceClick(price)}
+              >
+                {price}
+              </div>
+            ))}
+          </div>
+        )}
+        <div
+          className="text-[#fff] text-[16px] mt-[20px]   display flex space-x-2 cursor-pointer"
+          onClick={toggleDropdownCategory}
+        >
           <h3 className="font-semibold">Category</h3>
           <MdOutlineKeyboardArrowDown className=" text-[24px]" />
         </div>
+        {isDropdownCategoryVisible && (
+          <div className="text-[#fff] text-[12px] mt-[10px] flex flex-col">
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className="cursor-pointer w-[25%] mb-2 "
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </div>
+            ))}
+          </div>
+        )}
 
         {currentUser ? (
           <div className="flex space-x-2 fixed bottom-[50px]">

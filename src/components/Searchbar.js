@@ -8,7 +8,7 @@ export default function Searchbar({ onSearch }) {
   const handleInputChange = (event) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    onSearch(newQuery); // Trigger onSearch on every input change
+    onSearch(newQuery);
   };
 
   return (
